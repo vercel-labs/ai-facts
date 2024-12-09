@@ -31,14 +31,14 @@ const generatePrompt = (
   - Statement: "The moon is made of cheese."
   - Classification: "obviously-fake"
 
-  Statement to analyze: "${statement}"${additionalInfo ? `\n\nUse the following additional information to guide your response:\n${additionalInfo}` : ""}${transcript ? `\n\nConversation context in case subject of statement is ambigious (infer subject from this trascript):\n${transcript.concat(" " + statement)}` : ""}
+  Statement to analyze: "${statement}"${additionalInfo ? `\n\nUse the following additional information to guide your response:\n${additionalInfo}` : ""}${transcript ? `\n\nConversation context in case subject of statement is ambigious (infer subject from this trascript, but ignore previous contradictory statements):\n${transcript.concat(" " + statement)}` : ""}
   `;
 };
 
 const generatePerplexityPrompt = (statement: string, transcript?: string) => {
   return `Analyze this statement and determine if it is true, dubious (questionable but not certain), or obviously fake. Provide a single sentence response in the format: "The statement is [true/dubious/obviously-fake] because [brief reason]." Do not provide sources. Slight spelling mistakes are ok and not considered a fake statement.
 
-Statement: "${statement}"${transcript ? `\n\nConversation context in case subject of statement is ambigious (infer subject from this trascript):\n${transcript.concat(" " + statement)}` : ""}
+Statement: "${statement}"${transcript ? `\n\nConversation context in case subject of statement is ambigious (infer subject from this trascript, but ignore previous contradictory statements):\n${transcript.concat(" " + statement)}` : ""}
 
 Note: Today's day is ${new Date().toISOString()} if relevant.
 `;
