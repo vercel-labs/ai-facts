@@ -1,4 +1,6 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextRequest, NextFetchEvent } from "next/server";
+import { kasadaHandler } from "./utils/kasada/kasada-server";
+import { kv } from "@vercel/kv";
 
 const corsOptions: {
   allowedMethods: string[];
@@ -15,29 +17,18 @@ const corsOptions: {
   maxAge:
     (process.env?.PREFLIGHT_MAX_AGE &&
       parseInt(process.env?.PREFLIGHT_MAX_AGE)) ||
-    undefined, // 60 * 60 * 24 * 30, // 30 days
+    undefined,
   credentials: process.env?.CREDENTIALS == "true",
 };
 
-/**
- * Middleware function that handles CORS configuration for API routes.
- *
- * This middleware function is responsible for setting the appropriate CORS headers
- * on the response, based on the configured CORS options. It checks the origin of
- * the request and sets the `Access-Control-Allow-Origin` header accordingly. It
- * also sets the other CORS-related headers, such as `Access-Control-Allow-Credentials`,
- * `Access-Control-Allow-Methods`, `Access-Control-Allow-Headers`, and
- * `Access-Control-Expose-Headers`.
- *
- * The middleware function is configured to be applied to all API routes, as defined
- * by the `config` object at the end of the file.
- */
-export function middleware(request: NextRequest) {
-  // Response
+const MAX_REQUESTS = 80;
+
+export async function middleware(req: NextRequest, ev: NextFetchEvent) {
+  // Start with the CORS logic
   const response = NextResponse.next();
 
   // Allowed origins check
-  const origin = request.headers.get("origin") ?? "";
+  const origin = req.headers.get("origin") ?? "";
   if (
     corsOptions.allowedOrigins.includes("*") ||
     corsOptions.allowedOrigins.includes(origin)
@@ -67,11 +58,32 @@ export function middleware(request: NextRequest) {
     corsOptions.maxAge?.toString() ?? ""
   );
 
-  // Return
+  // Rate limiting and Kasada logic for POST requests
+  if (req.method === "POST") {
+    if (process.env.NODE_ENV === "development") {
+      return response;
+    }
+
+    const realIp = req.headers.get("x-real-ip") || "no-ip";
+    const pipeline = kv.pipeline();
+
+    pipeline.incr(`rate-limit:${realIp}`);
+    pipeline.expire(`rate-limit:${realIp}`, 60 * 60 * 24, "NX");
+
+    const [requests] = (await pipeline.exec()) as [number];
+
+    if (requests > MAX_REQUESTS) {
+      return new Response("Too many requests", { status: 429 });
+    }
+
+    // Apply Kasada handler
+    return kasadaHandler(req, ev);
+  }
+
   return response;
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
-  matcher: "/api/authenticate",
+  matcher: ["/api/authenticate", "/"],
 };
+
