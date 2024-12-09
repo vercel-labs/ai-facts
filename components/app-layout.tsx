@@ -67,6 +67,13 @@ export default function AppLayout() {
   const processStatement = async (statement: Statement) => {
     try {
       const result = await checkFakeNews(statement.text);
+      if (result.accuracy === "obviously-fake") {
+        const audio = new Audio(
+          "https://ztaacy9ly66axcws.public.blob.vercel-storage.com/buzzer-short-0SHYV4jcWHzWWfMFHizflIz79Byecx.wav",
+        );
+        audio.volume = 0.1;
+        audio.play();
+      }
       statement.processed = true;
       statement.result = result;
       return statement;
