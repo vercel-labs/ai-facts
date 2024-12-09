@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest, NextFetchEvent } from "next/server";
 import { kasadaHandler } from "./utils/kasada/kasada-server";
 import { kv } from "@vercel/kv";
+import { ipAddress } from "@vercel/functions";
 
 const corsOptions: {
   allowedMethods: string[];
@@ -61,19 +62,17 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
   // Rate limiting and Kasada logic for POST requests
   if (req.method === "POST") {
     if (process.env.NODE_ENV === "development") {
-      return response;
+      return undefined;
     }
 
-    const realIp = req.headers.get("x-real-ip") || "no-ip";
+    const realIp = ipAddress(req) ?? 'no-ip';
     const pipeline = kv.pipeline();
-
     pipeline.incr(`rate-limit:${realIp}`);
-    pipeline.expire(`rate-limit:${realIp}`, 60 * 60 * 24, "NX");
-
+    pipeline.expire(`rate-limit:${realIp}`, 60 * 60 * 24, 'NX');
     const [requests] = (await pipeline.exec()) as [number];
 
     if (requests > MAX_REQUESTS) {
-      return new Response("Too many requests", { status: 429 });
+      return new Response('Too many requests (rate limit)', { status: 429 });
     }
 
     // Apply Kasada handler
@@ -84,6 +83,6 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
 }
 
 export const config = {
-  matcher: ["/api/authenticate", "/"],
+  matcher: ["/api/authenticate", "/", "/api/validate-statement"],
 };
 
