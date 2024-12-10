@@ -79,6 +79,17 @@ export default function AppLayout() {
       return statement;
     } catch (error) {
       console.error("Error processing statement:", error);
+      setIsListening(false);
+
+      const rateLimited =
+        error instanceof Error && error.message === "Rate limit exceeded";
+
+      toast.error("Error processing statement", {
+        description: `${rateLimited ? "You have been rate limited. " : ""}Please try again later.`,
+        position: "top-center",
+        richColors: true,
+        id: "error-toast",
+      });
       return statement;
     }
   };
@@ -114,11 +125,15 @@ export default function AppLayout() {
           "Content-Type": "application/json",
         },
       });
+      if (response.status === 429) {
+        throw new Error("Rate limit exceeded");
+      }
       return response.json();
     } catch (error) {
       toast.error("Error validating statement", {
         position: "top-center",
         richColors: true,
+        id: "error-toast",
       });
       throw error;
     }
