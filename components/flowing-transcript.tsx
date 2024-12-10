@@ -43,7 +43,7 @@ export default function FlowingTranscript({
   return (
     <Tooltip.Provider>
       <div className="w-full p-4 md:p-6 bg-background rounded-lg shadow-lg">
-        <div ref={transcriptRef} className="h-[68vh] sm:h-[79vh] overflow-y-auto ">
+        <div ref={transcriptRef} className="h-[65vh] sm:h-[79vh] overflow-y-auto ">
           {statements.length === 0 && !isTalking ? (
             <div className="h-full flex flex-col items-center justify-center space-y-4 px-4">
               <div className="">
