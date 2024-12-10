@@ -40,6 +40,10 @@ export default function FlowingTranscript({
     }
   };
   const pending = unprocessed?.trim() || isTalking;
+  const showLoading =
+    isTalking ||
+    (unprocessed?.trim() &&
+      !statements.at(-1)?.text.includes(unprocessed.trim()));
 
   return (
     <Tooltip.Provider>
@@ -129,7 +133,7 @@ export default function FlowingTranscript({
                 </TooltipRoot>
               </div>
             ))}
-            {pending && <TalkingIndicator />}
+            {showLoading && <TalkingIndicator />}
           </div>
         </div>
       </div>
