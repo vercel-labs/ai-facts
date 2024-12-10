@@ -68,18 +68,42 @@ export default function FlowingTranscript({
                 <h3 className="font-semibold text-xl">Start Speaking</h3>
                 <p className="text-muted-foreground">
                   Your words will be transcribed and fact-checked in real-time
-                  using AI
+                  using AI.{" "}
                 </p>
-              </div>
-              <div className="text-center text-sm text-muted-foreground">
-                Learn more about{" "}
-                <Link
-                  className="text-primary underline-offset-4 hover:underline"
-                  href="https://sdk.vercel.ai/"
-                  target="_blank"
-                >
-                  the AI SDK
-                </Link>
+                <p className="text-center text-sm text-muted-foreground">
+                  Transcriptions powered by{" "}
+                  <Link
+                    className="text-primary underline-offset-4 hover:underline"
+                    href="https://deepgram.com/"
+                    target="_blank"
+                  >
+                    Deepgram
+                  </Link>{" "}
+                  and fact-checking powered by{" "}
+                  <Link
+                    className="text-primary underline-offset-4 hover:underline"
+                    href="https://perplexity.ai"
+                    target="_blank"
+                  >
+                    Perplexity
+                  </Link>
+                  {" and "}
+                  <Link
+                    className="text-primary underline-offset-4 hover:underline"
+                    href="https://openai.com"
+                    target="_blank"
+                  >
+                    OpenAI
+                  </Link>{" "}
+                  using the{" "}
+                  <Link
+                    className="text-primary underline-offset-4 hover:underline"
+                    href="https://sdk.vercel.ai/"
+                    target="_blank"
+                  >
+                    AI SDK
+                  </Link>.
+                </p>
               </div>
             </div>
           ) : (
