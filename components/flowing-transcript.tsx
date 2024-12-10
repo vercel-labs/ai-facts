@@ -102,7 +102,8 @@ export default function FlowingTranscript({
                     target="_blank"
                   >
                     AI SDK
-                  </Link>.
+                  </Link>
+                  .
                 </p>
               </div>
             </div>
@@ -134,7 +135,7 @@ export default function FlowingTranscript({
                               {item.result.reasoning}
                             </p>
                             <p
-                              className={`text-xs font-semibold ${
+                              className={`border-t border-border pt-2 mt-2 text-xs font-semibold ${
                                 item.result.accuracy === "true"
                                   ? "text-green-600"
                                   : item.result.accuracy === "dubious"
@@ -144,6 +145,10 @@ export default function FlowingTranscript({
                             >
                               {item.result.accuracy?.toUpperCase()}
                             </p>
+                            <div className="text-muted-foreground text-xs">
+                              <p>AI may not be accurate</p>
+                              <p>Always double-check with reliable sources</p>
+                            </div>
                           </>
                         ) : (
                           <p className="text-sm">Processing...</p>
