@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { Toaster } from "@/components/ui/sonner";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
+import { Analytics } from "@vercel/analytics/react"
 
 import { DeepgramContextProvider } from "./context/DeepgramContextProvider";
 import { MicrophoneContextProvider } from "./context/MicrophoneContextProvider";
@@ -46,6 +47,7 @@ export default function RootLayout({
         </MicrophoneContextProvider>
         <KasadaClient />
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
