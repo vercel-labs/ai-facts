@@ -85,6 +85,7 @@ export default function AppLayout() {
 
   const createStatementFromUnfinished = () => {
     if (unfinishedTextRef.current) {
+      setIsTalking(false);
       const completeStatement = unfinishedTextRef.current + ".";
       const newStatement = createNewStatement(completeStatement);
       setStatements((prev) => [...prev, newStatement]);

@@ -39,12 +39,16 @@ export default function FlowingTranscript({
         return "bg-zinc-50 dark:bg-zinc-800";
     }
   };
+  const pending = unprocessed?.trim() || isTalking;
 
   return (
     <Tooltip.Provider>
       <div className="w-full p-4 md:p-6 bg-background rounded-lg shadow-lg">
-        <div ref={transcriptRef} className="h-[65vh] sm:h-[79vh] overflow-y-auto ">
-          {statements.length === 0 && !isTalking ? (
+        <div
+          ref={transcriptRef}
+          className="h-[65vh] sm:h-[79vh] overflow-y-auto "
+        >
+          {statements.length === 0 && !pending ? (
             <div className="h-full flex flex-col items-center justify-center space-y-4 px-4">
               <div className="">
                 <div className="">
@@ -125,7 +129,7 @@ export default function FlowingTranscript({
                 </TooltipRoot>
               </div>
             ))}
-            {isTalking && unprocessed && <TalkingIndicator />}
+            {pending && <TalkingIndicator />}
           </div>
         </div>
       </div>
