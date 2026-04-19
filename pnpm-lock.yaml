@@ -8,9 +8,6 @@ dependencies:
   '@ai-sdk/gateway':
     specifier: ^3.0.104
     version: 3.0.104(zod@3.25.76)
-  '@ai-sdk/openai':
-    specifier: ^3.0.53
-    version: 3.0.53(zod@3.25.76)
   '@deepgram/sdk':
     specifier: ^3.9.0
     version: 3.13.0
@@ -136,17 +133,6 @@ packages:
       '@ai-sdk/provider': 3.0.8
       '@ai-sdk/provider-utils': 4.0.23(zod@3.25.76)
       '@vercel/oidc': 3.2.0
-      zod: 3.25.76
-    dev: false
-
-  /@ai-sdk/openai@3.0.53(zod@3.25.76):
-    resolution: {integrity: sha512-Wld+Rbc05KaUn08uBt06eEuwcgalcIFtIl32Yp+GxuZXUQwOb6YeAuq+C6da4ch6BurFoqEaLemJVwjBb7x+PQ==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      zod: ^3.25.76 || ^4.1.8
-    dependencies:
-      '@ai-sdk/provider': 3.0.8
-      '@ai-sdk/provider-utils': 4.0.23(zod@3.25.76)
       zod: 3.25.76
     dev: false
 

@@ -1,18 +1,11 @@
 import { validatedStatementSchema } from "@/utils/schemas";
 import { createGateway } from "@ai-sdk/gateway";
-import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject, generateText } from "ai";
 import { checkBotId } from "botid/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
 const gateway = createGateway();
-
-const perplexity = createOpenAI({
-  name: "perplexity",
-  apiKey: process.env.PERPLEXITY_API_KEY ?? "",
-  baseURL: "https://api.perplexity.ai/",
-});
 
 const generateCheckablePrompt = (statement: string, transcript?: string) => {
   return `
@@ -109,7 +102,7 @@ export const POST = async (request: Request) => {
   let additionalInfo: string | undefined = undefined;
   if (object.checkableType === "needs-more-info") {
     const { text: perplexityCheck } = await generateText({
-      model: perplexity("llama-3.1-sonar-small-128k-online"),
+      model: gateway("perplexity/sonar"),
       maxOutputTokens: 100,
       prompt: generatePerplexityPrompt(statement, transcript),
     });

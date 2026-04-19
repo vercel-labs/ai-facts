@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@ai-sdk/gateway": "^3.0.104",
-    "@ai-sdk/openai": "^3.0.53",
     "@deepgram/sdk": "^3.9.0",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",
