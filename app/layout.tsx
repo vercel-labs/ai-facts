@@ -10,7 +10,11 @@ import { MicrophoneContextProvider } from "./context/MicrophoneContextProvider";
 import "./globals.css";
 
 import type { Metadata, Viewport } from "next";
-import { KasadaClient } from "@/utils/kasada/kasada-client";
+import { BotIdClient } from "botid/client";
+
+const protectedRoutes = [
+  { path: "/api/validate-statement", method: "POST" },
+];
 
 export const viewport: Viewport = {
   themeColor: "#000000",
@@ -45,7 +49,7 @@ export default function RootLayout({
         <MicrophoneContextProvider>
           <DeepgramContextProvider>{children}</DeepgramContextProvider>
         </MicrophoneContextProvider>
-        <KasadaClient />
+        <BotIdClient protect={protectedRoutes} />
         <Toaster />
         <Analytics />
       </body>
