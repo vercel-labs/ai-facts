@@ -9,14 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^1.0.6",
     "@deepgram/sdk": "^3.3.0",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.4",
-    "ai": "^4.0.10",
+    "ai": "^6.0.168",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
