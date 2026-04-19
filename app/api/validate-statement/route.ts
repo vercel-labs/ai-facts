@@ -1,14 +1,7 @@
 import { validatedStatementSchema,  } from "@/utils/schemas";
-import { createOpenAI, openai } from "@ai-sdk/openai";
 import { generateObject, generateText } from "ai";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-
-const perplexity = createOpenAI({
-  name: "perplexity",
-  apiKey: process.env.PERPLEXITY_API_KEY ?? "",
-  baseURL: "https://api.perplexity.ai/",
-});
 
 const generateCheckablePrompt = (statement: string, transcript?: string) => {
   return `
@@ -78,7 +71,7 @@ export const POST = async (request: Request) => {
   }
 
   const { object } = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: "openai/gpt-4o-mini",
     prompt: generateCheckablePrompt(statement, transcript),
     schema: z.object({
       checkableType: z
@@ -100,15 +93,15 @@ export const POST = async (request: Request) => {
   let additionalInfo: string | undefined = undefined;
   if (object.checkableType === "needs-more-info") {
     const { text: perplexityCheck } = await generateText({
-      model: perplexity("llama-3.1-sonar-small-128k-online"),
-      maxTokens: 100,
+      model: "perplexity/sonar",
+      maxOutputTokens: 100,
       prompt: generatePerplexityPrompt(statement, transcript),
     });
     additionalInfo = perplexityCheck;
   }
 
   const { object: generation } = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: "openai/gpt-4o-mini",
     schema: validatedStatementSchema,
     prompt: generatePrompt(statement, transcript, additionalInfo),
   });
