@@ -1,14 +1,11 @@
-import { validatedStatementSchema,  } from "@/utils/schemas";
-import { createOpenAI, openai } from "@ai-sdk/openai";
+import { validatedStatementSchema } from "@/utils/schemas";
+import { createGateway } from "@ai-sdk/gateway";
 import { generateObject, generateText } from "ai";
+import { checkBotId } from "botid/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-const perplexity = createOpenAI({
-  name: "perplexity",
-  apiKey: process.env.PERPLEXITY_API_KEY ?? "",
-  baseURL: "https://api.perplexity.ai/",
-});
+const gateway = createGateway();
 
 const generateCheckablePrompt = (statement: string, transcript?: string) => {
   return `
@@ -45,6 +42,11 @@ Note: Today's day is ${new Date().toISOString()} if relevant.
 };
 
 export const POST = async (request: Request) => {
+  const { isBot } = await checkBotId();
+  if (isBot) {
+    return NextResponse.json({ error: "Access denied" }, { status: 403 });
+  }
+
   const { statement, transcript: transcriptRaw } = await request.json();
 
   const hasAmbiguiousSubject = (text: string): boolean => {
@@ -78,7 +80,7 @@ export const POST = async (request: Request) => {
   }
 
   const { object } = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: gateway("openai/gpt-4o-mini"),
     prompt: generateCheckablePrompt(statement, transcript),
     schema: z.object({
       checkableType: z
@@ -100,15 +102,15 @@ export const POST = async (request: Request) => {
   let additionalInfo: string | undefined = undefined;
   if (object.checkableType === "needs-more-info") {
     const { text: perplexityCheck } = await generateText({
-      model: perplexity("llama-3.1-sonar-small-128k-online"),
-      maxTokens: 100,
+      model: gateway("perplexity/sonar"),
+      maxOutputTokens: 100,
       prompt: generatePerplexityPrompt(statement, transcript),
     });
     additionalInfo = perplexityCheck;
   }
 
   const { object: generation } = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: gateway("openai/gpt-4o-mini"),
     schema: validatedStatementSchema,
     prompt: generatePrompt(statement, transcript, additionalInfo),
   });
