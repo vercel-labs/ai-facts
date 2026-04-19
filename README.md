@@ -2,7 +2,7 @@
 
 **Note:** LLMs can sometimes provide incorrect or outdated information. Always verify critical information through trusted sources.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fai-facts&env=AI_GATEWAY_API_KEY,DEEPGRAM_API_KEY&envDescription=Learn%20more%20about%20how%20to%20get%20the%20API%20Keys%20for%20the%20application&envLink=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fai-facts%2Fblob%2Fmain%2F.env.example&demo-title=AI%20Facts&demo-description=Real-time%20fact%20checking%20using%20audio%20transcription%20and%20AI&demo-url=https%3A%2F%2Fai-facts.vercel.app)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fai-facts&env=DEEPGRAM_API_KEY&envDescription=Learn%20more%20about%20how%20to%20get%20the%20API%20Keys%20for%20the%20application&envLink=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fai-facts%2Fblob%2Fmain%2F.env.example&demo-title=AI%20Facts&demo-description=Real-time%20fact%20checking%20using%20audio%20transcription%20and%20AI&demo-url=https%3A%2F%2Fai-facts.vercel.app)
 
 This project is a Next.js application that performs real-time fact checking on spoken statements. It uses Deepgram for audio transcription and leverages OpenAI and Perplexity (via the Vercel AI Gateway) to verify the accuracy of claims.
 
